@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .payment-modes {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+        }
+        
+        .payment-content {
+            padding: 20px;
+        }
+        
+        .payment-method {
+            display: none;
+        }
+        
+        .payment-method.active {
+            display: block;
+        }
+        
+        .payment-option {
+            margin-bottom: 20px;
+        }
+        
+        .payment-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .payment-detail {
+            background-color: #f9f9f9;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .copy-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .qris-image {
+            width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 1px solid #eee;
+        }
+        
+        .instructions {
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Payment Gateway
+        </div>
+        
+        <div class="payment-modes">
+            <button class="mode-btn active" onclick="switchMode('transfer')">Dana/Gopay</button>
+            <button class="mode-btn" onclick="switchMode('qris')">QRIS</button>
+        </div>
+        
+        <div class="payment-content">
+            <div class="payment-method active" id="transfer-method">
+                <div class="payment-option">
+                    <div class="payment-title">DANA</div>
+                    <div class="payment-detail">
+                        <span id="dana-number">082125330201</span>
+                        <button class="copy-btn" onclick="copyToClipboard('dana-number')">Salin</button>
+                    </div>
+                </div>
+                
+                <div class="payment-option">
+                    <div class="payment-title">GOPAY</div>
+                    <div class="payment-detail">
+                        <span id="gopay-number">089503822335</span>
+                        <button class="copy-btn" onclick="copyToClipboard('gopay-number')">Salin</button>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <p>1. Lakukan transfer sesuai nominal pembayaran</p>
+                    <p>2. Simpan bukti transfer</p>
+                    <p>3. Konfirmasi pembayaran dengan mengirim bukti transfer</p>
+                </div>
+            </div>
+            
+            <div class="payment-method" id="qris-method">
+                <div class="payment-option">
+                    <div class="payment-title">QRIS</div>
+                    <img src="https://files.catbox.moe/51h4cs.jpg" alt="QRIS Payment" class="qris-image">
+                </div>
+                
+                <div class="instructions">
+                    <p>1. Buka aplikasi mobile banking atau e-wallet yang mendukung QRIS</p>
+                    <p>2. Scan QR code di atas</p>
+                    <p>3. Masukkan nominal pembayaran dan konfirmasi</p>
+                    <p>4. Simpan bukti pembayaran</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchMode(mode) {
+            // Update active tab
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (mode === 'transfer') {
+                document.querySelectorAll('.mode-btn')[0].classList.add('active');
+            } else {
+                document.querySelectorAll('.mode-btn')[1].classList.add('active');
+            }
+            
+            // Update active content
+            document.getElementById('transfer-method').classList.remove('active');
+            document.getElementById('qris-method').classList.remove('active');
+            document.getElementById(mode + '-method').classList.add('active');
+        }
+        
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = element.innerText;
+                element.innerText = 'Tersalin!';
+                
+                setTimeout(() => {
+                    element.innerText = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Gagal menyalin: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
